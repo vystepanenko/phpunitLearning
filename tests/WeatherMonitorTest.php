@@ -6,6 +6,7 @@ class WeatherMonitorTest extends MockeryTestCase
 {
     public function testCorrectAveregaIsReturned()
     {
+        /** @var TemperatureService $service */
         $service = $this->createMock(TemperatureService::class);
 
         $map = [
@@ -24,6 +25,7 @@ class WeatherMonitorTest extends MockeryTestCase
 
     public function testCorrectAverageIsReturnedWithMockery()
     {
+        /** @var TemperatureService $service */
         $service = Mockery::mock(TemperatureService::class);
 
         $service->shouldReceive('getTemperature')
@@ -36,7 +38,6 @@ class WeatherMonitorTest extends MockeryTestCase
                 ->with('14:00')
                 ->andReturn(26);
 
-                
         $weather = new WeatherMonitor($service);
 
         $this->assertEquals(23, $weather->getAverageTemperature('12:00', '14:00'));

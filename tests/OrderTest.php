@@ -11,31 +11,35 @@ class OrderTest extends TestCase
 
     public function testOrderIsProcessed()
     {
-        $getway = $this->getMockBuilder('PaymentGateway')
+        /** @var PaymentGateway $gateway */
+        $gateway = $this->getMockBuilder('PaymentGateway')
                     ->setMethods(['charge'])
                     ->getMock();
 
-        $getway->expects($this->once())
+        $gateway->expects($this->once())
                 ->method('charge')
                 ->with($this->equalTo(200))
                 ->willReturn(true);
 
-        $order = new Order($getway);
+        $order = new Order($gateway);
         $order->amount = 200;
         $this->assertTrue($order->process());
     }
 
     public function testOrderIsProcessedUsingMockery()
     {
-        $getway = Mockery::mock('PaymentGateway');
+        /** @var PaymentGateway $gateway */
+        $gateway = Mockery::mock('PaymentGateway');
 
-        $getway->shouldReceive('charge')
+        $gateway->shouldReceive('charge')
                 ->once()
                 ->with(200)
-                ->andReturn(true); 
+                ->andReturn(true);
 
-        $order = new Order($getway);
+        $order = new Order($gateway);
+
         $order->amount = 200;
+        
         $this->assertTrue($order->process());
     }
 }
